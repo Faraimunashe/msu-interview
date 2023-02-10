@@ -20,14 +20,23 @@ class CompanyController extends Controller
         $request->validate([
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:companies,email'],
-            'logo' => ['file', 'required'],
+            'logo' => 'required|image|mimes:jpg,png,jpeg|max:2048',
             'website' => ['required']
         ]);
 
         try{
+            $destinationPath = 'images';
+            $myimage = $request->logo->getClientOriginalName();
+            $finalname = $myimage;
+            $request->logo->move(public_path($destinationPath), $finalname);
+            //$name = $request->file('logo')->getClientOriginalName();
+
+           //$path = $request->file('logo')->store('public/images');
+
             $company = new Company();
             $company->name = $request->name;
             $company->email = $request->email;
+            $company->logo = $finalname;
             $company->website = $request->website;
 
             //upload file her
@@ -44,15 +53,24 @@ class CompanyController extends Controller
         $request->validate([
             'company_id' => ['required', 'numeric'],
             'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:companies,email'],
+            'email' => ['required', 'email'],
             'logo' => ['file', 'required'],
             'website' => ['required']
         ]);
 
         try{
+            $destinationPath = 'images';
+            $myimage = $request->logo->getClientOriginalName();
+            $finalname = $myimage;
+            $request->logo->move(public_path($destinationPath), $finalname);
+            //$name = $request->file('logo')->getClientOriginalName();
+
+           //$path = $request->file('logo')->store('public/images');
+
             $company = Company::find($request->company_id);
             $company->name = $request->name;
             $company->email = $request->email;
+            $company->logo = $finalname;
             $company->website = $request->website;
 
             //upload file her
